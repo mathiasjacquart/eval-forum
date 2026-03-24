@@ -1,0 +1,12 @@
+services:
+  api:
+    build: ./API
+    ports:
+      - "8080:80"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./API
+          target: /app
+          ignore:
+            - node_modules/
