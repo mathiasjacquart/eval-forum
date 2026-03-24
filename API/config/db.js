@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 
 async function connectDB() {
   try {
-    // await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connexion a la base de donnees OK");
+    const mongoUri = process.env.MONGO_URI;
+    await mongoose.connect(mongoUri);
+    console.log("Connexion a MongoDB OK");
   } catch (error) {
     console.error("Erreur de connexion a la base de donnees :", error.message);
     process.exit(1);

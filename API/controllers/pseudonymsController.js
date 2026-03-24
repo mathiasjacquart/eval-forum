@@ -1,22 +1,30 @@
-const pseudonyms = [];
-function getPseudonyms(req, res) {
-  res.json(pseudonyms);
+const Pseudonym = require("../models/Pseudonym");
+
+async function getPseudonyms(req, res) {
+  try {
+    const pseudonyms = await Pseudonym.find().sort({ createdAt: -1 });
+    return res.json(pseudonyms);
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
 }
 
-function createPseudonym(req, res) {
+async function createPseudonym(req, res) {
   const { name } = req.body;
 
   if (!name) {
     return res.status(400).json({ message: "Le champ name est obligatoire." });
   }
 
-  const newPseudonym = {
-    id: pseudonyms.length + 1,
-    name,
-  };
-
-  pseudonyms.push(newPseudonym);
-  return res.status(201).json(newPseudonym);
+  try {
+    const newPseudonym = await Pseudonym.create({ name });
+    return res.status(201).json(newPseudonym);
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "Ce pseudonyme existe deja." });
+    }
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
 }
 
 module.exports = {

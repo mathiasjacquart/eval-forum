@@ -1,10 +1,15 @@
-const posts = [];
+const Post = require("../models/Post");
 
-function getPosts(req, res) {
-  res.json(posts);
+async function getPosts(req, res) {
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+    return res.json(posts);
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
 }
 
-function createPost(req, res) {
+async function createPost(req, res) {
   const { title, content } = req.body;
 
   if (!title || !content) {
@@ -13,14 +18,12 @@ function createPost(req, res) {
       .json({ message: "Les champs title et content sont obligatoires." });
   }
 
-  const newPost = {
-    id: posts.length + 1,
-    title,
-    content,
-  };
-
-  posts.push(newPost);
-  return res.status(201).json(newPost);
+  try {
+    const newPost = await Post.create({ title, content });
+    return res.status(201).json(newPost);
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
 }
 
 module.exports = {
