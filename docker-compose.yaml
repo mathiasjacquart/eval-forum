@@ -1,8 +1,6 @@
 services:
   api:
     build: ./API
-    ports:
-      - "3000:80"
     environment:
       - MONGO_URI=mongodb://root:example@mongodb:27017/forum?authSource=admin
     develop:
@@ -14,6 +12,9 @@ services:
             - node_modules/
     depends_on:
       - mongodb
+    networks:
+      - internal_net
+      - public_net
   thread:
     build: ./THREAD
     ports:
@@ -22,6 +23,8 @@ services:
       - API_URL=http://api:80
     depends_on:
       - api
+    networks:
+      - public_net
   sender:
     build: ./SENDER
     ports:
@@ -30,18 +33,22 @@ services:
       - API_URL=http://api:80
     depends_on:
       - api
+    networks:
+      - public_net
   mongodb:
     image: mongo:7
-    ports:
-      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
+    networks:
+      - internal_net
 volumes:
   mongodb_data:
 networks:
-  eval-net: {}
+  public_net: {}
+  internal_net:
+    internal: true
 
   
