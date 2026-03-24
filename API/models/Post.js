@@ -12,6 +12,11 @@ const postSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    pseudonym: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pseudonym",
+      required: true,
+    },
   },
   {
     timestamps: true,

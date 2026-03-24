@@ -3,11 +3,8 @@ services:
     build: ./API
     ports:
       - "8080:80"
-    volumes:
-      - app_output:/app_output
     environment:
-      - MONGODB_URL=mongodb://root:example@mongodb:27017/?authSource=admin
-      - OUTPUT_PATH=/app_output
+      - MONGO_URI=mongodb://root:example@mongodb:27017/forum?authSource=admin
     develop:
       watch:
         - action: sync+restart
@@ -28,4 +25,3 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
 volumes:
   mongodb_data:
-  app_output:

@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 80;
 async function startServer() {
   try {
     await connectDB();
+    
     app.listen(PORT, () => {
       console.log(`Serveur demarre sur http://localhost:${PORT}`);
     });
