@@ -7,10 +7,20 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./WEBAPP
-          target: /app
-          ignore:
-            - node_modules/
+          path: ./WEBAPP/src
+          target: /app/src
+        - action: sync+restart
+          path: ./WEBAPP/package.json
+          target: /app/package.json
+        - action: sync+restart
+          path: ./WEBAPP/package-lock.json
+          target: /app/package-lock.json
+        - action: sync+restart
+          path: ./WEBAPP/vite.config.js
+          target: /app/vite.config.js
+        - action: sync+restart
+          path: ./WEBAPP/index.html
+          target: /app/index.html
     depends_on:
       - api
   api:
