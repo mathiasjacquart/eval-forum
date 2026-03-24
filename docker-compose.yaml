@@ -1,32 +1,8 @@
 services:
-  webapp:
-    build: ./WEBAPP
-    ports:
-      - "5173:5173"
-    command: npm run dev -- --host 0.0.0.0 --port 5173
-    develop:
-      watch:
-        - action: sync
-          path: ./WEBAPP/src
-          target: /app/src
-        - action: sync+restart
-          path: ./WEBAPP/package.json
-          target: /app/package.json
-        - action: sync+restart
-          path: ./WEBAPP/package-lock.json
-          target: /app/package-lock.json
-        - action: sync+restart
-          path: ./WEBAPP/vite.config.js
-          target: /app/vite.config.js
-        - action: sync+restart
-          path: ./WEBAPP/index.html
-          target: /app/index.html
-    depends_on:
-      - api
   api:
     build: ./API
     ports:
-      - "8080:80"
+      - "3000:80"
     environment:
       - MONGO_URI=mongodb://root:example@mongodb:27017/forum?authSource=admin
     develop:
@@ -38,6 +14,22 @@ services:
             - node_modules/
     depends_on:
       - mongodb
+  thread:
+    build: ./THREAD
+    ports:
+      - "80:80"
+    environment:
+      - API_URL=http://api:80
+    depends_on:
+      - api
+  sender:
+    build: ./SENDER
+    ports:
+      - "8080:8080"
+    environment:
+      - API_URL=http://api:80
+    depends_on:
+      - api
   mongodb:
     image: mongo:7
     ports:
@@ -49,3 +41,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
 volumes:
   mongodb_data:
+networks:
+  eval-net: {}
+
+  
