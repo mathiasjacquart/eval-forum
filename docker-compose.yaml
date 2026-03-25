@@ -12,9 +12,10 @@ services:
             - node_modules/
     depends_on:
       - mongodb
+    expose:
+      - "80"
     networks:
       - internal_net
-      - public_net
   thread:
     build: ./THREAD
     ports:
@@ -23,8 +24,16 @@ services:
       - API_URL=http://api:80
     depends_on:
       - api
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./THREAD
+          target: /app
+          ignore:
+            - node_modules/
     networks:
       - public_net
+      - internal_net
   sender:
     build: ./SENDER
     ports:
@@ -35,6 +44,7 @@ services:
       - api
     networks:
       - public_net
+      - internal_net
   mongodb:
     image: mongo:7
     volumes:
@@ -50,5 +60,3 @@ networks:
   public_net: {}
   internal_net:
     internal: true
-
-  

@@ -20,7 +20,7 @@ app.get("/", async (req, res) => {
             <p style="margin:0 0 5px;">${post.content}</p>
             <small>Par ${post.pseudonym?.name || "Inconnu"}</small>
           </li>
-        `
+        `,
       )
       .join("");
 
@@ -30,6 +30,7 @@ app.get("/", async (req, res) => {
         <body style="font-family:Arial,sans-serif;max-width:800px;margin:30px auto;">
           <h1>Messages utilisateurs</h1>
           <ul style="list-style:none;padding:0;">${postsHtml || "<li>Aucun message.</li>"}</ul>
+          <a href="http://localhost:8080">Envoyer un message</a>
         </body>
       </html>
     `);
